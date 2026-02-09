@@ -124,8 +124,22 @@ function App() {
     setIsAnimating(true)
     setError('')
 
-    // Check if next step is thank you
-    const nextQuestion = visibleQuestions[nextStep]
+    // Compute visible questions fresh to avoid stale closure
+    const currentAnswers = { ...answers }
+    const currentNps = currentAnswers[1]
+    const freshVisible = questions.filter((q) => {
+      if (!q.showIf) return true
+      const { field, op, value } = q.showIf
+      const answer = field === 'nps_score' ? currentNps : currentAnswers[field]
+      if (answer === undefined || answer === null) return false
+      if (op === '>=') return answer >= value
+      if (op === '<=') return answer <= value
+      return true
+    })
+
+    const nextQuestion = freshVisible[nextStep]
+
+    // Thank you screen — fade out only, no image slide
     if (nextQuestion?.type === 'thankyou') {
       const tl = gsap.timeline({
         onComplete: () => {
@@ -155,22 +169,25 @@ function App() {
       }
     })
 
+    // Fade + blur out content
     if (contentRef.current) {
       tl.to(contentRef.current, {
         opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
       }, 0)
     }
 
+    // Fade + blur out submit
     if (submitWrapRef.current) {
       tl.to(submitWrapRef.current, {
         opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
       }, 0)
     }
 
-    if (currentImageRef.current && nextImageRef.current && imagePanelRef.current) {
+    // Slide images
+    if (currentImageRef.current && nextImageRef.current && imagePanelRef.current && nextQuestion?.image) {
       const panelHeight = imagePanelRef.current.offsetHeight
 
-      nextImageRef.current.src = visibleQuestions[nextStep].image
+      nextImageRef.current.src = nextQuestion.image
       gsap.set(nextImageRef.current, { y: panelHeight, opacity: 1, force3D: true })
       gsap.set(currentImageRef.current, { force3D: true })
 
@@ -183,7 +200,7 @@ function App() {
       }, 0)
     }
 
-  }, [isAnimating, visibleQuestions, showThankYouScreen])
+  }, [isAnimating, answers, showThankYouScreen])
 
   // Reset images after step change
   useEffect(() => {
