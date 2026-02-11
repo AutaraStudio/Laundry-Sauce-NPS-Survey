@@ -42,7 +42,7 @@ export const questions = [
     id: 5,
     image: '/images/slide-3.png',
     type: 'thankyou',
-    heading: 'Thank you for your feedback!',
+    heading: 'Thank you for<br>your feedback!',
     body: 'Want to discover your new favorite scent?',
     linkText: 'Scent Quiz',
     linkUrl: 'https://laundrysauce.com',

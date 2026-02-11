@@ -378,11 +378,11 @@ body {
   align-items: center;
   gap: clamp(12px, 1.5vw, 20px);
   padding: 40px;
-  max-width: 460px;
+  max-width: 560px;
 }
 
 .thankyou-logo {
-  width: clamp(140px, 14vw, 200px);
+  width: clamp(200px, 18vw, 280px);
   height: auto;
   color: #fff;
   margin-bottom: clamp(8px, 1vw, 16px);

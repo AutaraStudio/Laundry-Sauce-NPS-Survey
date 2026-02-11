@@ -276,7 +276,7 @@ function App() {
         <div className="thankyou-overlay" />
         <div className="thankyou-content">
           <Logo className="thankyou-logo" />
-          <h1 className="thankyou-heading">{tyData.heading}</h1>
+          <h1 className="thankyou-heading" dangerouslySetInnerHTML={{ __html: tyData.heading }} />
           <p className="thankyou-body">
             {tyData.body}{' '}
             Get started with our <a href={tyData.linkUrl}>{tyData.linkText}</a>!
