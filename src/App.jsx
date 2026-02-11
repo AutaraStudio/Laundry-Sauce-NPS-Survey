@@ -350,7 +350,7 @@ function App() {
           {showButton && (
             <div ref={submitWrapRef} className="survey-submit">
               <button className="submit-btn" onClick={handleSubmit}>
-                {isLastSurveyStep ? 'Submit' : 'Next'}
+                {isLastSurveyStep && hasAnswer ? 'Submit' : 'Next'}
               </button>
             </div>
           )}

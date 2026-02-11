@@ -93,7 +93,7 @@ body {
 .survey-logo {
   width: clamp(200px, 18vw, 280px);
   height: auto;
-  margin-bottom: clamp(40px, 5vw, 64px);
+  margin-bottom: clamp(48px, 6vw, 80px);
   color: var(--color-text);
   flex-shrink: 0;
 }
@@ -127,12 +127,11 @@ body {
 
 .survey-question {
   font-family: var(--font-heading);
-  font-size: clamp(38px, 3.8vw, 56px);
+  font-size: clamp(38px, 4.2vw, 58px);
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.05;
   width: 100%;
-  max-width: 440px;
   margin-bottom: clamp(28px, 3vw, 44px);
   text-transform: uppercase;
   letter-spacing: 0.01em;
