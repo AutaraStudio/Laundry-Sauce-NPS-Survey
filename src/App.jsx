@@ -300,7 +300,6 @@ function App() {
         <Logo className="survey-logo" />
 
         <div className="survey-progress-wrapper">
-          <div className="survey-progress-label">{currentStep + 1} of {surveyQuestions.length}</div>
           <div className="survey-progress-track">
             <div className="survey-progress-fill" style={{ width: `${((currentStep + 1) / surveyQuestions.length) * 100}%` }} />
           </div>
