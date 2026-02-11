@@ -22,6 +22,22 @@ const Logo = ({ className }) => (
   </svg>
 )
 
+// Helper to evaluate showIf conditions
+function evalCondition(showIf, npsScore, answers) {
+  if (!showIf) return true
+  const { field, op, min, max, value } = showIf
+  const answer = field === 'nps_score' ? npsScore : answers[field]
+  if (answer === undefined || answer === null) return false
+  if (op === 'between') return answer >= min && answer <= max
+  if (op === '>=') return answer >= value
+  if (op === '<=') return answer <= value
+  return true
+}
+
+function getVisibleQuestions(answers, npsScore) {
+  return questions.filter((q) => evalCondition(q.showIf, npsScore, answers))
+}
+
 function App() {
   const [currentStep, setCurrentStep] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -36,23 +52,10 @@ function App() {
   const nextImageRef = useRef(null)
   const thankYouRef = useRef(null)
 
-  // Get NPS score for conditional logic
   const npsScore = answers[1]
-
-  // Filter questions based on conditions
-  const visibleQuestions = questions.filter((q) => {
-    if (!q.showIf) return true
-    const { field, op, value } = q.showIf
-    const answer = field === 'nps_score' ? npsScore : answers[field]
-    if (answer === undefined || answer === null) return false
-    if (op === '>=') return answer >= value
-    if (op === '<=') return answer <= value
-    return true
-  })
-
+  const visibleQuestions = getVisibleQuestions(answers, npsScore)
   const current = visibleQuestions[currentStep]
   const surveyQuestions = visibleQuestions.filter(q => q.type !== 'thankyou')
-  const progress = ((currentStep + 1) / visibleQuestions.length) * 100
   const isLast = currentStep === visibleQuestions.length - 1
 
   const currentAnswer = answers[current?.id]
@@ -124,22 +127,12 @@ function App() {
     setIsAnimating(true)
     setError('')
 
-    // Compute visible questions fresh to avoid stale closure
     const currentAnswers = { ...answers }
     const currentNps = currentAnswers[1]
-    const freshVisible = questions.filter((q) => {
-      if (!q.showIf) return true
-      const { field, op, value } = q.showIf
-      const answer = field === 'nps_score' ? currentNps : currentAnswers[field]
-      if (answer === undefined || answer === null) return false
-      if (op === '>=') return answer >= value
-      if (op === '<=') return answer <= value
-      return true
-    })
-
+    const freshVisible = getVisibleQuestions(currentAnswers, currentNps)
     const nextQuestion = freshVisible[nextStep]
 
-    // Thank you screen — fade out only, no image slide
+    // Thank you screen
     if (nextQuestion?.type === 'thankyou') {
       const tl = gsap.timeline({
         onComplete: () => {
@@ -169,14 +162,12 @@ function App() {
       }
     })
 
-    // Fade + blur out content
     if (contentRef.current) {
       tl.to(contentRef.current, {
         opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
       }, 0)
     }
 
-    // Fade + blur out submit
     if (submitWrapRef.current) {
       tl.to(submitWrapRef.current, {
         opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
@@ -214,33 +205,19 @@ function App() {
     }
   }, [currentStep, showThankYou])
 
-  // Scale select — auto advance
- // Scale select — auto advance with conditional logic
+  // Scale select — auto advance with conditional logic
   const handleScaleSelect = useCallback((value) => {
     if (isAnimating) return
     setError('')
     setAnswers(prev => ({ ...prev, [current.id]: value }))
 
-    // Compute next visible question based on this new answer
     setTimeout(() => {
       const updatedAnswers = { ...answers, [current.id]: value }
       const updatedNps = current.id === 1 ? value : npsScore
-
-      const nextVisible = questions.filter((q) => {
-        if (!q.showIf) return true
-        const { field, op, value: threshold } = q.showIf
-        const answer = field === 'nps_score' ? updatedNps : updatedAnswers[field]
-        if (answer === undefined || answer === null) return false
-        if (op === '>=') return answer >= threshold
-        if (op === '<=') return answer <= threshold
-        return true
-      })
-
+      const nextVisible = getVisibleQuestions(updatedAnswers, updatedNps)
       const currentIndexInNext = nextVisible.findIndex(q => q.id === current.id)
+
       if (currentIndexInNext < nextVisible.length - 1) {
-        // Find what step index the next question maps to in visibleQuestions after re-render
-        const nextQuestion = nextVisible[currentIndexInNext + 1]
-        // Force step to the right index
         setCurrentStep(currentIndexInNext + 1)
         setIsAnimating(false)
       }
