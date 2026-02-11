@@ -443,6 +443,7 @@ body {
 
   .survey-logo-wrapper {
     max-width: 100%;
+    text-align: center;
   }
 
   .survey-form-scroll {
@@ -461,29 +462,26 @@ body {
 
   .survey-question {
     font-size: clamp(30px, 9vw, 44px);
-    text-align: center;
+    text-align: left;
     max-width: 100%;
   }
 
   .survey-subtitle {
-    text-align: center;
+    text-align: left;
   }
 
   .survey-description {
-    text-align: center;
+    text-align: left;
   }
 
   .scale-buttons {
     gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
   }
 
   .scale-btn {
-    font-size: clamp(14px, 3.5vw, 16px);
+    font-size: clamp(13px, 3vw, 15px);
     border-radius: 6px;
-    min-width: 44px;
-    min-height: 44px;
+    min-height: 40px;
   }
 
   .survey-submit {
