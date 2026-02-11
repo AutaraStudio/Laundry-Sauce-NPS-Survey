@@ -290,7 +290,7 @@ body {
 .scale-btn {
   flex: 1;
   aspect-ratio: 1;
-  max-height: 48px;
+  max-height: 52px;
   border: 1.5px solid var(--color-border);
   border-radius: 8px;
   background: var(--color-surface);
@@ -474,11 +474,15 @@ body {
 
   .scale-buttons {
     gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .scale-btn {
-    font-size: clamp(13px, 3.5vw, 15px);
+    font-size: clamp(14px, 3.5vw, 16px);
     border-radius: 6px;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .survey-submit {
