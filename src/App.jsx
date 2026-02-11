@@ -11,14 +11,26 @@ CustomEase.create('buttery', '0.16, 1, 0.3, 1')
 CustomEase.create('imageSlide', '0.45, 0, 0.55, 1')
 
 const Logo = ({ className }) => (
-  <svg className={className} viewBox="0 0 236 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7.02047 20.514L38.3369 12.1305H10.0945L7.02047 20.514ZM6.59954 21.662L5.2839 25.25H5.28572L2.09656 34.1495L38.5941 13.0969L6.59954 21.662ZM1.57495 35.605L0 40H13.0334L39.094 13.9633L1.57495 35.605ZM14.4489 40H25.1661L39.8062 14.666L14.4489 40ZM26.3219 40H34.0116L40.6711 15.1693L26.3219 40ZM35.0478 40H41.6376V15.4292L35.0478 40ZM42.6385 40H49.2288L42.6385 15.4273V40ZM50.1713 39.6503L52.3203 33.6534C52.6446 32.7483 52.7601 31.7948 52.673 30.8601L43.6055 15.1691L50.1713 39.6503ZM50.386 24.9025C51.4645 24.6247 52.4867 24.1867 53.421 23.6103L44.4732 14.6707L50.386 24.9025ZM54.262 23.0363C55.1738 22.3502 55.9801 21.5219 56.6455 20.5763L45.1804 13.9629L54.262 23.0363ZM57.1836 19.732C57.492 19.1957 57.7578 18.6284 57.9758 18.0338L58.5256 16.5346L45.6778 13.0952L57.1836 19.732ZM58.8713 15.5918L60.1404 12.1305H45.9415L58.8713 15.5918ZM60.5071 11.1305L61.6315 8.06389C61.78 7.65908 61.8821 7.25179 61.9412 6.84684L45.9397 11.1305H60.5071ZM62 5.79582C61.9487 4.25961 61.2986 2.82175 60.2459 1.76246L45.6788 10.1651L62 5.79582ZM59.4324 1.07701C58.4714 0.403271 57.2938 0 55.9925 0H54.4856L45.1777 9.29939L59.4324 1.07701ZM53.0701 0H49.4371L44.4744 8.58786L53.0701 0ZM48.2814 0H45.7756L43.6056 8.09119L48.2814 0ZM44.7394 0H42.6385V7.83342L44.7394 0ZM41.6376 0H39.5372L41.6376 7.83154V0ZM38.501 0H35.9953L40.6709 8.09095L38.501 0ZM34.8396 0H31.2046L39.8051 8.59257L34.8396 0ZM29.7891 0H22.9754L39.0967 9.29905L29.7891 0ZM10.4612 11.1305H38.3387L12.953 4.33465L10.4612 11.1305ZM13.3033 3.39316L38.5932 10.1633L20.9736 0H18.3885C16.1557 0 14.1524 1.3462 13.3033 3.39316Z" fill="currentColor"/>
-    <path d="M193.827 12.4573H202.65L210.862 26.6222L219.1 12.4573H227.924V31.0604H223.778V12.6433L213.068 31.0604H208.683L197.946 12.6433V31.0604H193.827V12.4573Z" fill="currentColor"/>
-    <path d="M167.25 23.8317C164.114 23.8317 161.589 21.307 161.589 18.1445C161.589 15.0086 164.114 12.4573 167.25 12.4573H191.301V16.6031H167.25C166.4 16.6031 165.709 17.2941 165.709 18.1445C165.709 19.0215 166.4 19.7125 167.25 19.7125H185.614C188.75 19.7125 191.301 22.2372 191.301 25.3997C191.301 28.5357 188.75 31.0604 185.614 31.0604H161.589V26.9411H185.614C186.464 26.9411 187.155 26.2501 187.155 25.3997C187.155 24.5227 186.464 23.8317 185.614 23.8317H167.25Z" fill="currentColor"/>
-    <path d="M152.186 12.4573C156.172 12.4573 159.414 15.6995 159.414 19.7125C159.414 23.6989 156.172 26.9411 152.186 26.9411H133.583V31.0604H129.463V12.4573H152.186ZM152.159 22.7953C153.887 22.7953 155.269 21.4133 155.269 19.7125C155.269 17.9851 153.887 16.6031 152.159 16.6031H133.583V22.7953H152.159Z" fill="currentColor"/>
-    <path d="M107.304 16.6031C104.434 16.6031 102.121 18.9152 102.121 21.7588C102.121 24.629 104.434 26.9411 107.304 26.9411H122.665V23.6989H106.905V19.5796H126.81V31.0604H107.304C102.148 31.0604 98.0022 26.9145 98.0022 21.7588C98.0022 16.6297 102.148 12.4573 107.304 12.4573H126.81V16.6031H107.304Z" fill="currentColor"/>
-    <path d="M71.3288 31.0604V12.4573H75.4481V26.9411H96.2569V31.0604H71.3288Z" fill="currentColor"/>
-    <path d="M235.639 11.4177C235.639 12.7529 234.557 13.8354 233.222 13.8354C231.886 13.8354 230.804 12.7529 230.804 11.4177C230.804 10.0824 231.886 9 233.222 9C234.557 9 235.639 10.0824 235.639 11.4177Z" fill="currentColor"/>
+  <svg className={className} viewBox="0 0 303 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clipPath="url(#clip0_ls)">
+      <path d="M0.0820312 1.28809V23.2248H17.7717V19.6533H4.11432V1.28809H0.0820312Z" fill="currentColor"/>
+      <path d="M33.8476 0L20.4258 23.225H24.7409L27.8201 17.9516L33.8476 7.53044L42.8809 23.225H47.2693L33.8476 0Z" fill="currentColor"/>
+      <path d="M220.254 0L206.832 23.225H211.147L214.226 17.9516L220.254 7.53044L229.287 23.225H233.676L220.254 0Z" fill="currentColor"/>
+      <path d="M58.7189 24.0052C52.681 24.0052 48.125 19.2398 48.125 12.9138V1.25684H52.1887V13.0186C52.1887 17.2394 54.8752 20.1877 58.7189 20.1877C62.5627 20.1877 65.2858 17.2394 65.2858 13.0186V1.25684H69.3495V12.9138C69.3495 19.2398 64.7778 24.0052 58.7137 24.0052" fill="currentColor"/>
+      <path d="M91.2011 1.25146V16.2233L75.4804 1.25146H73.3281V23.2248H77.2557V8.32107L92.9712 23.2248H95.1235V1.25146H91.2011Z" fill="currentColor"/>
+      <path d="M111.384 19.6221C113.327 19.6069 115.184 18.8213 116.548 17.4378C117.912 16.0543 118.671 14.1861 118.658 12.2435C118.66 10.9594 118.33 9.69672 117.7 8.57779C117.07 7.43917 116.144 6.49174 115.021 5.83547C113.897 5.1792 112.617 4.83846 111.316 4.84923H103.911V19.6116L111.384 19.6221ZM99.8633 23.225V1.25684H111.384C117.474 1.25684 122.617 6.28935 122.617 12.254C122.617 18.2186 117.474 23.2512 111.384 23.2512L99.8633 23.225Z" fill="currentColor"/>
+      <path d="M140.966 10.4578C141.333 10.4657 141.698 10.3991 142.039 10.2621C142.38 10.1252 142.69 9.92062 142.95 9.66083C143.21 9.40103 143.414 9.09136 143.551 8.75044C143.688 8.40952 143.755 8.04439 143.747 7.67707C143.753 7.30845 143.686 6.94228 143.549 6.60003C143.412 6.25778 143.208 5.94633 142.949 5.68394C142.69 5.42154 142.381 5.21348 142.04 5.07195C141.7 4.93042 141.335 4.85827 140.966 4.85972H130.618V10.4578H140.966ZM143.391 23.225L143.249 23.0469C141.046 20.2581 139.158 17.2337 137.62 14.0292H130.618V23.225H126.586V1.25684H140.929C141.956 1.26222 142.966 1.51202 143.877 1.98557C144.787 2.45911 145.572 3.14276 146.166 3.97993L146.339 4.18941C147.016 5.2325 147.376 6.44932 147.376 7.69278C147.376 8.93624 147.016 10.1531 146.339 11.1962L146.203 11.4109H146.161C145.662 12.13 145.012 12.732 144.257 13.1751C143.502 13.6182 142.66 13.8917 141.788 13.9769C143.404 17.0035 145.348 19.8431 147.585 22.4447L148.25 23.225H143.391Z" fill="currentColor"/>
+      <path d="M167.94 1.25146L160.965 10.5205L154.157 1.25146H149.156L158.677 14.1967V23.2248H162.992V14.2019L172.779 1.25146H167.94Z" fill="currentColor"/>
+      <path d="M194.547 24.0052C190.918 23.9465 187.362 22.972 184.21 21.1721L183.875 20.9626L185.357 17.2079L185.839 17.4959C188.435 19.1119 191.417 20.0049 194.474 20.0828C196.873 20.0828 201.397 19.3392 201.397 16.5218C201.397 14.7099 199.742 14.0868 199.03 13.9035C197.797 13.6739 196.549 13.5357 195.296 13.4898C190.688 13.1808 184.378 12.7566 184.378 7.00668C184.378 4.47733 186.666 2.29362 188.928 1.42955C190.712 0.76638 192.603 0.443106 194.506 0.476463C197.555 0.513998 200.548 1.29792 203.225 2.75969L203.597 2.95869L202.266 6.38875L201.8 6.15833C199.36 4.95388 197.166 4.15267 194.401 4.15267C194.155 4.15267 188.331 4.18932 188.331 7.1795C188.361 7.50542 188.486 7.81533 188.691 8.07052C188.896 8.32572 189.172 8.51487 189.484 8.61437C191.201 9.32656 193.306 9.42082 195.343 9.51509C197.059 9.53003 198.767 9.73196 200.439 10.1173C203.502 10.9657 205.566 13.4845 205.566 16.4014C205.566 19.3183 203.24 24.0261 194.542 24.0261" fill="currentColor"/>
+      <path d="M244.779 24.0052C238.736 24.0052 234.18 19.2398 234.18 12.9138V1.25684H238.249V13.0186C238.249 17.2394 240.935 20.1877 244.779 20.1877C248.623 20.1877 251.346 17.2394 251.346 13.0186V1.25684H255.409V12.9138C255.409 19.2398 250.838 24.0052 244.779 24.0052Z" fill="currentColor"/>
+      <path d="M270.734 24.0053C267.656 23.9403 264.727 22.6723 262.574 20.4732C260.421 18.274 259.215 15.3187 259.215 12.2409C259.215 9.16311 260.421 6.20782 262.574 4.00865C264.727 1.80948 267.656 0.541488 270.734 0.476562C273.839 0.497483 276.815 1.72789 279.029 3.90664L279.374 4.24178L276.567 7.00155L276.237 6.6664C274.791 5.20166 272.828 4.363 270.77 4.33081C268.667 4.33081 266.651 5.16612 265.164 6.65299C263.677 8.13986 262.842 10.1565 262.842 12.2592C262.842 14.362 263.677 16.3786 265.164 17.8655C266.651 19.3523 268.667 20.1877 270.77 20.1877C272.833 20.1458 274.797 19.2936 276.237 17.8154L276.567 17.4803L279.374 20.2348L279.034 20.5752C277.945 21.6669 276.652 22.5321 275.227 23.1209C273.802 23.7096 272.275 24.0102 270.734 24.0053Z" fill="currentColor"/>
+      <path d="M283.137 1.25146V23.2248H302.916V19.6167H287.164V14.0239H294.286V10.4524H287.164V4.85958H300.894V1.25146H283.137Z" fill="currentColor"/>
+    </g>
+    <defs>
+      <clipPath id="clip0_ls">
+        <rect width="302.836" height="24" fill="white" transform="translate(0.0820312)"/>
+      </clipPath>
+    </defs>
   </svg>
 )
 
@@ -56,7 +68,10 @@ function App() {
   const visibleQuestions = getVisibleQuestions(answers, npsScore)
   const current = visibleQuestions[currentStep]
   const surveyQuestions = visibleQuestions.filter(q => q.type !== 'thankyou')
-  const isLast = currentStep === visibleQuestions.length - 1
+  const thankyouIndex = visibleQuestions.findIndex(q => q.type === 'thankyou')
+
+  // Is the NEXT step the thank you? Then show SUBMIT
+  const isLastSurveyStep = currentStep === thankyouIndex - 1 || currentStep === visibleQuestions.length - 1
 
   const currentAnswer = answers[current?.id]
   const hasAnswer = (() => {
@@ -65,7 +80,8 @@ function App() {
     return currentAnswer !== undefined && currentAnswer !== ''
   })()
 
-  const needsSubmitButton = current?.type === 'text' || current?.type === 'slider'
+  // Always show a button (NEXT or SUBMIT)
+  const showButton = current?.type === 'scale' || current?.type === 'text' || current?.type === 'slider'
 
   // Preload all images
   useEffect(() => {
@@ -205,24 +221,12 @@ function App() {
     }
   }, [currentStep, showThankYou])
 
-  // Scale select — auto advance with conditional logic
+  // Scale select — just store value, no auto advance
   const handleScaleSelect = useCallback((value) => {
     if (isAnimating) return
     setError('')
     setAnswers(prev => ({ ...prev, [current.id]: value }))
-
-    setTimeout(() => {
-      const updatedAnswers = { ...answers, [current.id]: value }
-      const updatedNps = current.id === 1 ? value : npsScore
-      const nextVisible = getVisibleQuestions(updatedAnswers, updatedNps)
-      const currentIndexInNext = nextVisible.findIndex(q => q.id === current.id)
-
-      if (currentIndexInNext < nextVisible.length - 1) {
-        setCurrentStep(currentIndexInNext + 1)
-        setIsAnimating(false)
-      }
-    }, 400)
-  }, [current?.id, currentStep, isAnimating, answers, npsScore])
+  }, [current?.id, isAnimating])
 
   // Text input
   const handleTextChange = (value) => {
@@ -239,24 +243,26 @@ function App() {
     }
     setError('')
 
-    if (isLast) {
+    if (isLastSurveyStep) {
+      // This is the last survey question — submit and go to thank you
       console.log('Survey complete:', answers)
+      transitionToStep(currentStep + 1)
     } else {
       transitionToStep(currentStep + 1)
     }
-  }, [hasAnswer, isLast, answers, isAnimating, currentStep, transitionToStep])
+  }, [hasAnswer, isLastSurveyStep, answers, isAnimating, currentStep, transitionToStep])
 
   // Enter key
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Enter' && needsSubmitButton) {
+      if (e.key === 'Enter' && showButton) {
         e.preventDefault()
         handleSubmit()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handleSubmit, needsSubmitButton])
+  }, [handleSubmit, showButton])
 
   useEffect(() => {
     setError('')
@@ -300,62 +306,64 @@ function App() {
           </div>
         </div>
 
-        <div ref={contentRef} className="survey-content">
-          <h2 className="survey-question">{current.question}</h2>
+        <div className="survey-form-scroll">
+          <div ref={contentRef} className="survey-content">
+            <h2 className="survey-question">{current.question}</h2>
 
-          {current.subtitle && <p className="survey-subtitle">{current.subtitle}</p>}
-          {current.description && <p className="survey-description">{current.description}</p>}
+            {current.subtitle && <p className="survey-subtitle">{current.subtitle}</p>}
+            {current.description && <p className="survey-description">{current.description}</p>}
 
-          <div className="survey-options-wrapper">
-            <div className="survey-options">
+            <div className="survey-options-wrapper">
+              <div className="survey-options">
 
-              {current.type === 'scale' && (
-                <div className="scale-container">
-                  <div className="scale-buttons">
-                    {Array.from({ length: current.max - current.min + 1 }, (_, i) => {
-                      const val = current.min + i
-                      const isSelected = currentAnswer === val
-                      const inRange = currentAnswer && val <= currentAnswer && val > current.min
-                      return (
-                        <button
-                          key={val}
-                          className={`scale-btn ${isSelected ? 'selected' : inRange ? 'in-range' : ''}`}
-                          onClick={() => handleScaleSelect(val)}
-                        >
-                          {val}
-                        </button>
-                      )
-                    })}
+                {current.type === 'scale' && (
+                  <div className="scale-container">
+                    <div className="scale-buttons">
+                      {Array.from({ length: current.max - current.min + 1 }, (_, i) => {
+                        const val = current.min + i
+                        const isSelected = currentAnswer === val
+                        const inRange = currentAnswer !== undefined && currentAnswer !== null && val <= currentAnswer && val > current.min
+                        return (
+                          <button
+                            key={val}
+                            className={`scale-btn ${isSelected ? 'selected' : inRange ? 'in-range' : ''}`}
+                            onClick={() => handleScaleSelect(val)}
+                          >
+                            {val}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <div className="scale-labels">
+                      <span className="scale-label">{current.minLabel}</span>
+                      <span className="scale-label">{current.maxLabel}</span>
+                    </div>
                   </div>
-                  <div className="scale-labels">
-                    <span className="scale-label">{current.minLabel}</span>
-                    <span className="scale-label">{current.maxLabel}</span>
-                  </div>
-                </div>
-              )}
+                )}
 
-              {current.type === 'text' && (
-                <textarea
-                  className="option-textarea"
-                  placeholder={current.placeholder || 'Type your answer here...'}
-                  rows={5}
-                  value={currentAnswer || ''}
-                  onChange={(e) => handleTextChange(e.target.value)}
-                />
-              )}
+                {current.type === 'text' && (
+                  <textarea
+                    className="option-textarea"
+                    placeholder={current.placeholder || 'Type your answer here...'}
+                    rows={5}
+                    value={currentAnswer || ''}
+                    onChange={(e) => handleTextChange(e.target.value)}
+                  />
+                )}
+              </div>
+
+              <div className={`error-tooltip ${error ? 'visible' : ''}`}>{error}</div>
             </div>
-
-            <div className={`error-tooltip ${error ? 'visible' : ''}`}>{error}</div>
           </div>
+
+          {showButton && (
+            <div ref={submitWrapRef} className="survey-submit">
+              <button className="submit-btn" onClick={handleSubmit}>
+                {isLastSurveyStep ? 'Submit' : 'Next'}
+              </button>
+            </div>
+          )}
         </div>
-
-        {needsSubmitButton && (
-          <div ref={submitWrapRef} className="survey-submit">
-            <button className="submit-btn" onClick={handleSubmit}>
-              Submit
-            </button>
-          </div>
-        )}
       </div>
     </div>
   )
