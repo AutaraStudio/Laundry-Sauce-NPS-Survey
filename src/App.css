@@ -475,13 +475,15 @@ body {
   }
 
   .scale-buttons {
-    gap: 6px;
+    gap: 4px;
   }
 
   .scale-btn {
-    font-size: clamp(13px, 3vw, 15px);
+    font-size: clamp(12px, 2.8vw, 14px);
     border-radius: 6px;
-    min-height: 40px;
+    aspect-ratio: 1;
+    min-height: unset;
+    max-height: unset;
   }
 
   .survey-submit {
