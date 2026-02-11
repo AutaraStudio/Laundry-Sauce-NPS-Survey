@@ -385,7 +385,7 @@ body {
   width: clamp(200px, 18vw, 280px);
   height: auto;
   color: #fff;
-  margin-bottom: clamp(8px, 1vw, 16px);
+  margin-bottom: clamp(20px, 2.5vw, 40px);
 }
 
 .thankyou-heading {
