@@ -127,7 +127,7 @@ body {
 
 .survey-question {
   font-family: var(--font-heading);
-  font-size: clamp(38px, 4.2vw, 58px);
+  font-size: clamp(40px, 4.5vw, 62px);
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.05;

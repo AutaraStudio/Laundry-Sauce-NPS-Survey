@@ -299,7 +299,7 @@ function App() {
         <div className="survey-form-scroll">
           <Logo className="survey-logo" />
           <div ref={contentRef} className="survey-content">
-            <h2 className="survey-question">{current.question}</h2>
+            <h2 className="survey-question" dangerouslySetInnerHTML={{ __html: current.question }} />
 
             {current.subtitle && <p className="survey-subtitle">{current.subtitle}</p>}
             {current.description && <p className="survey-description">{current.description}</p>}

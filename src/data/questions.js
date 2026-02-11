@@ -2,7 +2,7 @@ export const questions = [
   {
     id: 1,
     image: '/images/slide-1.png',
-    question: 'How likely are you to recommend Laundry Sauce to a friend?',
+    question: 'How likely are<br>you to recommend<br>Laundry Sauce to<br>a friend?',
     type: 'scale',
     min: 0,
     max: 10,
