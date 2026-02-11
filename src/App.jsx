@@ -296,8 +296,11 @@ function App() {
       </div>
 
       <div className="survey-form-panel">
-        <div className="survey-form-scroll">
+        <div className="survey-logo-wrapper">
           <Logo className="survey-logo" />
+        </div>
+
+        <div className="survey-form-scroll">
           <div ref={contentRef} className="survey-content">
             <h2 className="survey-question" dangerouslySetInnerHTML={{ __html: current.question }} />
 
