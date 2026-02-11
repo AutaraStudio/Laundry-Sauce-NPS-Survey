@@ -67,7 +67,6 @@ function App() {
   const npsScore = answers[1]
   const visibleQuestions = getVisibleQuestions(answers, npsScore)
   const current = visibleQuestions[currentStep]
-  const surveyQuestions = visibleQuestions.filter(q => q.type !== 'thankyou')
   const thankyouIndex = visibleQuestions.findIndex(q => q.type === 'thankyou')
 
   // Is the NEXT step the thank you? Then show SUBMIT
@@ -297,15 +296,8 @@ function App() {
       </div>
 
       <div className="survey-form-panel">
-        <Logo className="survey-logo" />
-
-        <div className="survey-progress-wrapper">
-          <div className="survey-progress-track">
-            <div className="survey-progress-fill" style={{ width: `${((currentStep + 1) / surveyQuestions.length) * 100}%` }} />
-          </div>
-        </div>
-
         <div className="survey-form-scroll">
+          <Logo className="survey-logo" />
           <div ref={contentRef} className="survey-content">
             <h2 className="survey-question">{current.question}</h2>
 
