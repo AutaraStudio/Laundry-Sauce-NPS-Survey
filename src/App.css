@@ -295,7 +295,7 @@ body {
   flex: 1;
   aspect-ratio: 1;
   max-height: 52px;
-  border: 1.5px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-box);
   background: var(--color-surface);
   color: var(--color-text);
@@ -311,8 +311,9 @@ body {
 }
 
 .scale-btn:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-border-hover);
+  color: var(--color-surface);
+  background: var(--color-text);
+  border-color: var(--color-text);
   transform: translateY(-1px);
 }
 
