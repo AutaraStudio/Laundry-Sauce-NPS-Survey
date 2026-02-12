@@ -64,6 +64,11 @@ function App() {
   const nextImageRef = useRef(null)
   const thankYouRef = useRef(null)
 
+  const answersRef = useRef(answers)
+  useEffect(() => {
+    answersRef.current = answers
+  }, [answers])
+
   const npsScore = answers[1]
   const visibleQuestions = getVisibleQuestions(answers, npsScore)
   const current = visibleQuestions[currentStep]
@@ -144,7 +149,7 @@ function App() {
     setIsAnimating(true)
     setError('')
 
-    const currentAnswers = { ...answers }
+    const currentAnswers = { ...answersRef.current }
     const currentNps = currentAnswers[1]
     const freshVisible = getVisibleQuestions(currentAnswers, currentNps)
     const nextQuestion = freshVisible[nextStep]
@@ -208,7 +213,7 @@ function App() {
       }, 0)
     }
 
-  }, [isAnimating, answers, showThankYouScreen])
+  }, [isAnimating, showThankYouScreen])
 
   // Reset images after step change
   useEffect(() => {
@@ -226,18 +231,17 @@ function App() {
   const handleScaleSelect = useCallback((value) => {
     if (isAnimating) return
     setError('')
-    setAnswers(prev => {
-      const updated = { ...prev, [current.id]: value }
-      // Auto-advance after a brief delay
-      setTimeout(() => {
-        const freshVisible = getVisibleQuestions(updated, updated[1])
-        const nextStep = currentStep + 1
-        if (nextStep < freshVisible.length) {
-          transitionToStep(nextStep)
-        }
-      }, 300)
-      return updated
-    })
+    const updated = { ...answersRef.current, [current.id]: value }
+    answersRef.current = updated
+    setAnswers(updated)
+    // Auto-advance after a brief delay
+    setTimeout(() => {
+      const freshVisible = getVisibleQuestions(updated, updated[1])
+      const nextStep = currentStep + 1
+      if (nextStep < freshVisible.length) {
+        transitionToStep(nextStep)
+      }
+    }, 300)
   }, [current?.id, isAnimating, currentStep, transitionToStep])
 
   // Text input
@@ -257,12 +261,12 @@ function App() {
 
     if (isLastSurveyStep) {
       // This is the last survey question — submit and go to thank you
-      console.log('Survey complete:', answers)
+      console.log('Survey complete:', answersRef.current)
       transitionToStep(currentStep + 1)
     } else {
       transitionToStep(currentStep + 1)
     }
-  }, [hasAnswer, isLastSurveyStep, answers, isAnimating, currentStep, transitionToStep])
+  }, [hasAnswer, isLastSurveyStep, isAnimating, currentStep, transitionToStep])
 
   // Enter key
   useEffect(() => {
