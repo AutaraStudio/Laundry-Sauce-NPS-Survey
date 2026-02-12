@@ -233,8 +233,9 @@ function App() {
       }, i * STAGGER_OUT)
     })
 
-    // Slide images if the next question has a different image
+    // Slide images — skip if heading to thank you screen
     if (
+      nextQuestion?.type !== 'thankyou' &&
       currentImageRef.current &&
       nextImageRef.current &&
       imagePanelRef.current &&
