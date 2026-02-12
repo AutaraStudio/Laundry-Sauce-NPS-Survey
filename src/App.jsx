@@ -15,6 +15,30 @@ const STAGGER_OUT = 0.04
 const DURATION_IN = 0.55
 const DURATION_OUT = 0.28
 
+// Parse ?nps= from URL on load
+function getNpsFromUrl() {
+  const params = new URLSearchParams(window.location.search)
+  const raw = params.get('nps')
+  if (raw === null) return null
+  const num = parseInt(raw, 10)
+  if (isNaN(num) || num < 0 || num > 10) return null
+  return num
+}
+
+// Compute initial state from URL param
+function getInitialState() {
+  const urlNps = getNpsFromUrl()
+  if (urlNps !== null) {
+    // Pre-fill the NPS answer (question id 1)
+    const initialAnswers = { 1: urlNps }
+    const visible = getVisibleQuestions(initialAnswers, urlNps)
+    // Skip to step 1 (the follow-up text question)
+    const startStep = Math.min(1, visible.length - 1)
+    return { answers: initialAnswers, step: startStep, fromUrl: true }
+  }
+  return { answers: {}, step: 0, fromUrl: false }
+}
+
 const Logo = ({ className }) => (
   <svg className={className} viewBox="0 0 303 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_ls)">
@@ -62,8 +86,10 @@ function getAnimItems(container) {
 }
 
 function App() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [answers, setAnswers] = useState({})
+  const initial = useRef(getInitialState()).current
+
+  const [currentStep, setCurrentStep] = useState(initial.step)
+  const [answers, setAnswers] = useState(initial.answers)
   const [error, setError] = useState('')
   const [isAnimating, setIsAnimating] = useState(false)
   const [showThankYou, setShowThankYou] = useState(false)
