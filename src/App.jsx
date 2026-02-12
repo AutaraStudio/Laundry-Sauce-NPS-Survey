@@ -100,6 +100,7 @@ function App() {
   const currentImageRef = useRef(null)
   const nextImageRef = useRef(null)
   const thankYouRef = useRef(null)
+  const surveyContainerRef = useRef(null)
   const autoAdvanceTimer = useRef(null)
 
   const answersRef = useRef(answers)
@@ -111,6 +112,13 @@ function App() {
   const visibleQuestions = getVisibleQuestions(answers, npsScore)
   const current = visibleQuestions[currentStep]
   const thankyouIndex = visibleQuestions.findIndex(q => q.type === 'thankyou')
+
+  // Track last survey question so form stays rendered during thank you crossfade
+  const lastSurveyQ = useRef(null)
+  if (current && current.type !== 'thankyou') {
+    lastSurveyQ.current = current
+  }
+  const displayQ = showThankYou ? lastSurveyQ.current : current
 
   const isLastSurveyStep = currentStep === thankyouIndex - 1 || currentStep === visibleQuestions.length - 1
 
@@ -172,28 +180,60 @@ function App() {
     return () => tl.kill()
   }, [currentStep, showThankYou])
 
-  // Show thank you screen
-  const showThankYouScreen = useCallback(() => {
+  // ─── Transition to thank you: unified crossfade ───
+  const transitionToThankYou = useCallback((nextStep) => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    setError('')
+
+    // Immediately render the thank you screen (hidden)
     setShowThankYou(true)
+    setCurrentStep(nextStep)
 
     requestAnimationFrame(() => {
-      if (!thankYouRef.current) return
-      const items = getAnimItems(thankYouRef.current)
-      gsap.set(thankYouRef.current, { opacity: 1 })
-      gsap.set(items, { opacity: 0, y: 20, filter: 'blur(8px)' })
+      if (!thankYouRef.current) {
+        setIsAnimating(false)
+        return
+      }
 
-      const tl = gsap.timeline({ delay: 0.15 })
-      items.forEach((el, i) => {
+      const tyItems = getAnimItems(thankYouRef.current)
+      gsap.set(thankYouRef.current, { opacity: 0 })
+      gsap.set(tyItems, { opacity: 0, y: 24, filter: 'blur(10px)' })
+
+      const tl = gsap.timeline({
+        onComplete: () => setIsAnimating(false)
+      })
+
+      // Fade out the entire survey (form + image panel together)
+      if (surveyContainerRef.current) {
+        tl.to(surveyContainerRef.current, {
+          opacity: 0,
+          scale: 0.97,
+          filter: 'blur(6px)',
+          duration: 0.7,
+          ease: 'power2.inOut',
+        }, 0)
+      }
+
+      // Crossfade in the thank you backdrop, overlapping
+      tl.to(thankYouRef.current, {
+        opacity: 1,
+        duration: 0.8,
+        ease: 'power2.inOut',
+      }, 0.15)
+
+      // Stagger in thank you content elements
+      tyItems.forEach((el, i) => {
         tl.to(el, {
           opacity: 1,
           y: 0,
           filter: 'blur(0px)',
-          duration: 0.65,
+          duration: 0.7,
           ease: 'buttery',
-        }, i * 0.1)
+        }, 0.4 + i * 0.12)
       })
     })
-  }, [])
+  }, [isAnimating])
 
   // ─── Staggered exit + image slide ───
   const transitionToStep = useCallback((nextStep) => {
@@ -206,6 +246,13 @@ function App() {
     const freshVisible = getVisibleQuestions(currentAnswers, currentNps)
     const nextQuestion = freshVisible[nextStep]
 
+    // Thank you → use dedicated crossfade
+    if (nextQuestion?.type === 'thankyou') {
+      setIsAnimating(false) // transitionToThankYou will re-set this
+      transitionToThankYou(nextStep)
+      return
+    }
+
     const items = getAnimItems(formAreaRef.current)
     const btn = submitWrapRef.current
     const allEls = btn ? [...items, btn] : items
@@ -215,9 +262,6 @@ function App() {
       onComplete: () => {
         setCurrentStep(nextStep)
         setIsAnimating(false)
-        if (nextQuestion?.type === 'thankyou') {
-          showThankYouScreen()
-        }
       }
     })
 
@@ -233,9 +277,8 @@ function App() {
       }, i * STAGGER_OUT)
     })
 
-    // Slide images — skip if heading to thank you screen
+    // Slide images
     if (
-      nextQuestion?.type !== 'thankyou' &&
       currentImageRef.current &&
       nextImageRef.current &&
       imagePanelRef.current &&
@@ -267,7 +310,7 @@ function App() {
       }
     }
 
-  }, [isAnimating, showThankYouScreen, currentStep, current])
+  }, [isAnimating, transitionToThankYou, currentStep, current])
 
   // Reset images after step change
   useEffect(() => {
@@ -304,7 +347,7 @@ function App() {
       if (nextStep < freshVisible.length) {
         transitionToStep(nextStep)
       }
-    }, 400)
+    }, 80)
   }, [current?.id, isAnimating, currentStep, transitionToStep])
 
   // Clean up auto-advance timer
@@ -358,100 +401,100 @@ function App() {
     setError('')
   }, [currentStep])
 
-  // ─── Thank you screen ───
-  if (showThankYou) {
-    const tyData = visibleQuestions.find(q => q.type === 'thankyou')
-    return (
-      <div ref={thankYouRef} className="thankyou-screen" style={{ opacity: 0 }}>
-        <img src={tyData.image} alt="" className="thankyou-bg" />
-        <div className="thankyou-overlay" />
-        <div className="thankyou-content">
-          <div className="anim-item"><Logo className="thankyou-logo" /></div>
-          <h1 className="anim-item thankyou-heading" dangerouslySetInnerHTML={{ __html: tyData.heading }} />
-          <p className="anim-item thankyou-body">
-            {tyData.body}<br />
-            Get started with our <a href={tyData.linkUrl}>{tyData.linkText}</a>!
-          </p>
-        </div>
-      </div>
-    )
-  }
+  // ─── Thank you data ───
+  const tyData = visibleQuestions.find(q => q.type === 'thankyou')
 
-  if (!current || current.type === 'thankyou') return null
+  if (!displayQ) return null
 
   return (
-    <div className="survey-container">
-      <div className="survey-image-panel" ref={imagePanelRef}>
-        <img ref={currentImageRef} src={current.image} alt="" className="survey-image" />
-        <img ref={nextImageRef} src="" alt="" className="survey-image" style={{ opacity: 0 }} />
-      </div>
-
-      <div className="survey-form-panel">
-        <div className="survey-logo-wrapper">
-          <Logo className="survey-logo" />
+    <>
+      <div className="survey-container" ref={surveyContainerRef}>
+        <div className="survey-image-panel" ref={imagePanelRef}>
+          <img ref={currentImageRef} src={displayQ.image} alt="" className="survey-image" />
+          <img ref={nextImageRef} src="" alt="" className="survey-image" style={{ opacity: 0 }} />
         </div>
 
-        <div className="survey-form-scroll" ref={formAreaRef}>
-          {/* Each .anim-item is an individually animated element */}
-          <div className="survey-content">
-            <h2 className="anim-item survey-question" dangerouslySetInnerHTML={{ __html: current.question }} />
-
-            {current.subtitle && <p className="anim-item survey-subtitle">{current.subtitle}</p>}
-            {current.description && <p className="anim-item survey-description">{current.description}</p>}
-
-            <div className="anim-item survey-options-wrapper">
-              <div className="survey-options">
-
-                {current.type === 'scale' && (
-                  <div className="scale-container">
-                    <div className="scale-buttons">
-                      {Array.from({ length: current.max - current.min + 1 }, (_, i) => {
-                        const val = current.min + i
-                        const isSelected = currentAnswer === val
-                        const inRange = currentAnswer !== undefined && currentAnswer !== null && val <= currentAnswer && val > current.min
-                        return (
-                          <button
-                            key={val}
-                            className={`scale-btn ${isSelected ? 'selected' : inRange ? 'in-range' : ''}`}
-                            onClick={() => handleScaleSelect(val)}
-                          >
-                            {val}
-                          </button>
-                        )
-                      })}
-                    </div>
-                    <div className="scale-labels">
-                      <span className="scale-label">{current.minLabel}</span>
-                      <span className="scale-label">{current.maxLabel}</span>
-                    </div>
-                  </div>
-                )}
-
-                {current.type === 'text' && (
-                  <textarea
-                    className="option-textarea"
-                    placeholder={current.placeholder || 'Type your answer here...'}
-                    rows={5}
-                    value={currentAnswer || ''}
-                    onChange={(e) => handleTextChange(e.target.value)}
-                  />
-                )}
-              </div>
-
-              <div className={`error-tooltip ${error ? 'visible' : ''}`}>{error}</div>
-            </div>
+        <div className="survey-form-panel">
+          <div className="survey-logo-wrapper">
+            <Logo className="survey-logo" />
           </div>
 
-          {showButton && (
-            <div ref={submitWrapRef} className="survey-submit">
-              <button className="submit-btn" onClick={handleSubmit}>
-                {current.type === 'scale' ? 'Next' : 'Submit'}
-              </button>
+          <div className="survey-form-scroll" ref={formAreaRef}>
+            <div className="survey-content">
+              <h2 className="anim-item survey-question" dangerouslySetInnerHTML={{ __html: displayQ.question }} />
+
+              {displayQ.subtitle && <p className="anim-item survey-subtitle">{displayQ.subtitle}</p>}
+              {displayQ.description && <p className="anim-item survey-description">{displayQ.description}</p>}
+
+              <div className="anim-item survey-options-wrapper">
+                <div className="survey-options">
+
+                  {displayQ.type === 'scale' && (
+                    <div className="scale-container">
+                      <div className="scale-buttons">
+                        {Array.from({ length: displayQ.max - displayQ.min + 1 }, (_, i) => {
+                          const val = displayQ.min + i
+                          const isSelected = currentAnswer === val
+                          const inRange = currentAnswer !== undefined && currentAnswer !== null && val <= currentAnswer && val > displayQ.min
+                          return (
+                            <button
+                              key={val}
+                              className={`scale-btn ${isSelected ? 'selected' : inRange ? 'in-range' : ''}`}
+                              onClick={() => handleScaleSelect(val)}
+                            >
+                              {val}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      <div className="scale-labels">
+                        <span className="scale-label">{displayQ.minLabel}</span>
+                        <span className="scale-label">{displayQ.maxLabel}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {displayQ.type === 'text' && (
+                    <textarea
+                      className="option-textarea"
+                      placeholder={displayQ.placeholder || 'Type your answer here...'}
+                      rows={5}
+                      value={currentAnswer || ''}
+                      onChange={(e) => handleTextChange(e.target.value)}
+                    />
+                  )}
+                </div>
+
+                <div className={`error-tooltip ${error ? 'visible' : ''}`}>{error}</div>
+              </div>
             </div>
-          )}
+
+            {showButton && !showThankYou && (
+              <div ref={submitWrapRef} className="survey-submit">
+                <button className="submit-btn" onClick={handleSubmit}>
+                  {displayQ.type === 'scale' ? 'Next' : 'Submit'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {showThankYou && tyData && (
+        <div ref={thankYouRef} className="thankyou-screen" style={{ opacity: 0 }}>
+          <img src={tyData.image} alt="" className="thankyou-bg" />
+          <div className="thankyou-overlay" />
+          <div className="thankyou-content">
+            <div className="anim-item"><Logo className="thankyou-logo" /></div>
+            <h1 className="anim-item thankyou-heading" dangerouslySetInnerHTML={{ __html: tyData.heading }} />
+            <p className="anim-item thankyou-body">
+              {tyData.body}<br />
+              Get started with our <a href={tyData.linkUrl}>{tyData.linkText}</a>!
+            </p>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
