@@ -1,7 +1,7 @@
 export const questions = [
   {
     id: 1,
-    image: '/images/slide-1.png',
+    image: '/images/slide-1.webp',
     question: 'How likely are<br>you to recommend<br>Laundry Sauce to<br>a friend?',
     type: 'scale',
     min: 0,
@@ -11,7 +11,7 @@ export const questions = [
   },
   {
     id: 2,
-    image: '/images/slide-2.png',
+    image: '/images/slide-2.webp',
     question: 'Awesome!',
     subtitle: 'What do you love most about Laundry Sauce?',
     description: "We'd love to know what stood out or made your experience great.",
@@ -21,7 +21,7 @@ export const questions = [
   },
   {
     id: 3,
-    image: '/images/slide-2.png',
+    image: '/images/slide-2.webp',
     question: 'What would make you more likely to recommend us?',
     description: 'Your input helps us take the next step from "good" to "amazing."',
     type: 'text',
@@ -30,7 +30,7 @@ export const questions = [
   },
   {
     id: 4,
-    image: '/images/slide-2.png',
+    image: '/images/slide-2.webp',
     question: 'Oh no! 😔',
     subtitle: 'How could we make things better?',
     description: 'We really want to understand what went wrong so that we can improve.',
@@ -40,7 +40,7 @@ export const questions = [
   },
   {
     id: 5,
-    image: '/images/slide-3.png',
+    image: '/images/slide-3.webp',
     type: 'thankyou',
     heading: 'Thank you for<br>your feedback!',
     body: 'Want to discover your new favorite scent?',
