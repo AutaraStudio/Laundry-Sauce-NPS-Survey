@@ -23,8 +23,8 @@
   --color-text-light: #6A6560;
   --color-error: #E53E3E;
   --color-black: #1A1A1A;
-  --radius-pill: 0px;
-  --radius-box: 0px;
+  --radius-pill: 50px;
+  --radius-box: 10px;
   --font-heading: 'D-DINCondensed-Bold', 'Arial Narrow', 'Impact', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -102,8 +102,6 @@ body {
   color: var(--color-text);
 }
 
-
-
 /* Scrollable form area */
 .survey-form-scroll {
   width: 100%;
@@ -122,12 +120,17 @@ body {
   display: none;
 }
 
-/* Animated content wrapper */
+/* Content wrapper — no longer animated as a block */
 .survey-content {
   width: 100%;
-  opacity: 0;
-  filter: blur(8px);
-  will-change: opacity, filter;
+}
+
+/* ─── Staggered animation items ─── */
+.anim-item {
+  will-change: opacity, transform, filter;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .survey-question {
@@ -198,9 +201,10 @@ body {
 
 /* Submit / Next Button */
 .survey-submit {
-  opacity: 0;
-  filter: blur(8px);
-  will-change: opacity, filter;
+  will-change: opacity, transform, filter;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   padding-top: clamp(28px, 3vw, 44px);
   flex-shrink: 0;
 }
@@ -291,9 +295,9 @@ body {
   flex: 1;
   aspect-ratio: 1;
   max-height: 52px;
-  border: 1px solid var(--color-border);
-  border-radius: 0px;
-  background: var(--color-bg);  
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: clamp(14px, 1.1vw, 16px);
@@ -307,15 +311,14 @@ body {
 }
 
 .scale-btn:hover {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
   transform: translateY(-1px);
 }
 
 .scale-btn.selected {
   background: var(--color-primary);
-  color: var(--color-bg);
+  color: #fff;
   border-color: var(--color-primary);
 }
 
@@ -352,7 +355,6 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  opacity: 0;
   will-change: opacity;
 }
 

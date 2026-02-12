@@ -10,6 +10,11 @@ CustomEase.create('smooth', '0.22, 1, 0.36, 1')
 CustomEase.create('buttery', '0.16, 1, 0.3, 1')
 CustomEase.create('imageSlide', '0.45, 0, 0.55, 1')
 
+const STAGGER_IN = 0.07
+const STAGGER_OUT = 0.04
+const DURATION_IN = 0.55
+const DURATION_OUT = 0.28
+
 const Logo = ({ className }) => (
   <svg className={className} viewBox="0 0 303 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_ls)">
@@ -50,6 +55,12 @@ function getVisibleQuestions(answers, npsScore) {
   return questions.filter((q) => evalCondition(q.showIf, npsScore, answers))
 }
 
+// Collect all .anim-item elements inside a container
+function getAnimItems(container) {
+  if (!container) return []
+  return Array.from(container.querySelectorAll('.anim-item'))
+}
+
 function App() {
   const [currentStep, setCurrentStep] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -57,12 +68,13 @@ function App() {
   const [isAnimating, setIsAnimating] = useState(false)
   const [showThankYou, setShowThankYou] = useState(false)
 
-  const contentRef = useRef(null)
+  const formAreaRef = useRef(null)
   const submitWrapRef = useRef(null)
   const imagePanelRef = useRef(null)
   const currentImageRef = useRef(null)
   const nextImageRef = useRef(null)
   const thankYouRef = useRef(null)
+  const autoAdvanceTimer = useRef(null)
 
   const answersRef = useRef(answers)
   useEffect(() => {
@@ -74,7 +86,6 @@ function App() {
   const current = visibleQuestions[currentStep]
   const thankyouIndex = visibleQuestions.findIndex(q => q.type === 'thankyou')
 
-  // Is the NEXT step the thank you? Then show SUBMIT
   const isLastSurveyStep = currentStep === thankyouIndex - 1 || currentStep === visibleQuestions.length - 1
 
   const currentAnswer = answers[current?.id]
@@ -84,8 +95,8 @@ function App() {
     return currentAnswer !== undefined && currentAnswer !== ''
   })()
 
-  // Show button for text questions only (not scale)
-  const showButton = current?.type === 'text' || current?.type === 'slider'
+  // Show button on all interactive slides
+  const showButton = current?.type === 'scale' || current?.type === 'text' || current?.type === 'slider'
 
   // Preload all images
   useEffect(() => {
@@ -97,33 +108,39 @@ function App() {
     })
   }, [])
 
-  // Animate content in
+  // ─── Staggered entrance animation ───
   useLayoutEffect(() => {
     if (showThankYou || !current || current.type === 'thankyou') return
 
-    gsap.set(contentRef.current, { opacity: 0, filter: 'blur(12px)', y: 8 })
-    if (submitWrapRef.current) {
-      gsap.set(submitWrapRef.current, { opacity: 0, filter: 'blur(12px)', y: 8 })
-    }
+    const items = getAnimItems(formAreaRef.current)
+    const btn = submitWrapRef.current
 
-    const tl = gsap.timeline({ delay: 0.05 })
+    // Set initial state for all items
+    gsap.set(items, { opacity: 0, y: 18, filter: 'blur(8px)' })
+    if (btn) gsap.set(btn, { opacity: 0, y: 14, filter: 'blur(6px)' })
 
-    tl.to(contentRef.current, {
-      opacity: 1,
-      filter: 'blur(0px)',
-      y: 0,
-      duration: 0.5,
-      ease: 'power2.out',
-    }, 0)
+    const tl = gsap.timeline({ delay: 0.08 })
 
-    if (submitWrapRef.current) {
-      tl.to(submitWrapRef.current, {
+    // Stagger in each element
+    items.forEach((el, i) => {
+      tl.to(el, {
         opacity: 1,
-        filter: 'blur(0px)',
         y: 0,
-        duration: 0.5,
-        ease: 'power2.out',
-      }, 0.05)
+        filter: 'blur(0px)',
+        duration: DURATION_IN,
+        ease: 'buttery',
+      }, i * STAGGER_IN)
+    })
+
+    // Button comes in last, slightly after final item
+    if (btn) {
+      tl.to(btn, {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        duration: DURATION_IN,
+        ease: 'buttery',
+      }, items.length * STAGGER_IN + 0.02)
     }
 
     return () => tl.kill()
@@ -134,16 +151,25 @@ function App() {
     setShowThankYou(true)
 
     requestAnimationFrame(() => {
-      if (thankYouRef.current) {
-        gsap.fromTo(thankYouRef.current,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.8, ease: 'power2.out' }
-        )
-      }
+      if (!thankYouRef.current) return
+      const items = getAnimItems(thankYouRef.current)
+      gsap.set(thankYouRef.current, { opacity: 1 })
+      gsap.set(items, { opacity: 0, y: 20, filter: 'blur(8px)' })
+
+      const tl = gsap.timeline({ delay: 0.15 })
+      items.forEach((el, i) => {
+        tl.to(el, {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.65,
+          ease: 'buttery',
+        }, i * 0.1)
+      })
     })
   }, [])
 
-  // Transition out then switch step
+  // ─── Staggered exit + image slide ───
   const transitionToStep = useCallback((nextStep) => {
     if (isAnimating) return
     setIsAnimating(true)
@@ -154,66 +180,67 @@ function App() {
     const freshVisible = getVisibleQuestions(currentAnswers, currentNps)
     const nextQuestion = freshVisible[nextStep]
 
-    // Thank you screen
-    if (nextQuestion?.type === 'thankyou') {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          setCurrentStep(nextStep)
-          setIsAnimating(false)
-          showThankYouScreen()
-        }
-      })
+    const items = getAnimItems(formAreaRef.current)
+    const btn = submitWrapRef.current
+    const allEls = btn ? [...items, btn] : items
 
-      if (contentRef.current) {
-        tl.to(contentRef.current, {
-          opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
-        }, 0)
-      }
-      if (submitWrapRef.current) {
-        tl.to(submitWrapRef.current, {
-          opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
-        }, 0)
-      }
-      return
-    }
-
+    // Build exit timeline
     const tl = gsap.timeline({
       onComplete: () => {
         setCurrentStep(nextStep)
         setIsAnimating(false)
+        if (nextQuestion?.type === 'thankyou') {
+          showThankYouScreen()
+        }
       }
     })
 
-    if (contentRef.current) {
-      tl.to(contentRef.current, {
-        opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
-      }, 0)
+    // Stagger out — reverse order for a nice cascading feel
+    const reversed = [...allEls].reverse()
+    reversed.forEach((el, i) => {
+      tl.to(el, {
+        opacity: 0,
+        y: -10,
+        filter: 'blur(6px)',
+        duration: DURATION_OUT,
+        ease: 'smooth',
+      }, i * STAGGER_OUT)
+    })
+
+    // Slide images if the next question has a different image
+    if (
+      currentImageRef.current &&
+      nextImageRef.current &&
+      imagePanelRef.current &&
+      nextQuestion?.image
+    ) {
+      const currentQ = freshVisible[currentStep] || current
+      const imageChanging = currentQ?.image !== nextQuestion.image
+
+      if (imageChanging) {
+        const panelHeight = imagePanelRef.current.offsetHeight
+
+        nextImageRef.current.src = nextQuestion.image
+        gsap.set(nextImageRef.current, { y: panelHeight, opacity: 1, force3D: true })
+        gsap.set(currentImageRef.current, { force3D: true })
+
+        tl.to(currentImageRef.current, {
+          y: -panelHeight,
+          duration: 0.7,
+          ease: 'imageSlide',
+          force3D: true,
+        }, 0)
+
+        tl.to(nextImageRef.current, {
+          y: 0,
+          duration: 0.7,
+          ease: 'imageSlide',
+          force3D: true,
+        }, 0)
+      }
     }
 
-    if (submitWrapRef.current) {
-      tl.to(submitWrapRef.current, {
-        opacity: 0, filter: 'blur(8px)', duration: 0.25, ease: 'smooth',
-      }, 0)
-    }
-
-    // Slide images
-    if (currentImageRef.current && nextImageRef.current && imagePanelRef.current && nextQuestion?.image) {
-      const panelHeight = imagePanelRef.current.offsetHeight
-
-      nextImageRef.current.src = nextQuestion.image
-      gsap.set(nextImageRef.current, { y: panelHeight, opacity: 1, force3D: true })
-      gsap.set(currentImageRef.current, { force3D: true })
-
-      tl.to(currentImageRef.current, {
-        y: -panelHeight, duration: 0.6, ease: 'imageSlide', force3D: true,
-      }, 0)
-
-      tl.to(nextImageRef.current, {
-        y: 0, duration: 0.6, ease: 'imageSlide', force3D: true,
-      }, 0)
-    }
-
-  }, [isAnimating, showThankYouScreen])
+  }, [isAnimating, showThankYouScreen, currentStep, current])
 
   // Reset images after step change
   useEffect(() => {
@@ -231,42 +258,62 @@ function App() {
   const handleScaleSelect = useCallback((value) => {
     if (isAnimating) return
     setError('')
+
+    // Clear any pending auto-advance
+    if (autoAdvanceTimer.current) {
+      clearTimeout(autoAdvanceTimer.current)
+      autoAdvanceTimer.current = null
+    }
+
     const updated = { ...answersRef.current, [current.id]: value }
     answersRef.current = updated
     setAnswers(updated)
-    // Auto-advance after a brief delay
-    setTimeout(() => {
+
+    // Auto-advance after a beat so user sees their selection
+    autoAdvanceTimer.current = setTimeout(() => {
+      autoAdvanceTimer.current = null
       const freshVisible = getVisibleQuestions(updated, updated[1])
       const nextStep = currentStep + 1
       if (nextStep < freshVisible.length) {
         transitionToStep(nextStep)
       }
-    }, 300)
+    }, 400)
   }, [current?.id, isAnimating, currentStep, transitionToStep])
+
+  // Clean up auto-advance timer
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current)
+    }
+  }, [])
 
   // Text input
   const handleTextChange = (value) => {
     setError('')
-    setAnswers(prev => ({ ...prev, [current.id]: value }))
+    const updated = { ...answersRef.current, [current.id]: value }
+    answersRef.current = updated
+    setAnswers(updated)
   }
 
   // Submit / next
   const handleSubmit = useCallback(() => {
     if (isAnimating) return
+
+    // If scale auto-advance is pending, cancel it — the user clicked manually
+    if (autoAdvanceTimer.current) {
+      clearTimeout(autoAdvanceTimer.current)
+      autoAdvanceTimer.current = null
+    }
+
     if (!hasAnswer) {
       setError('Please complete this question before continuing')
       return
     }
     setError('')
 
-    if (isLastSurveyStep) {
-      // This is the last survey question — submit and go to thank you
-      console.log('Survey complete:', answersRef.current)
-      transitionToStep(currentStep + 1)
-    } else {
-      transitionToStep(currentStep + 1)
-    }
-  }, [hasAnswer, isLastSurveyStep, isAnimating, currentStep, transitionToStep])
+    console.log('Survey answers so far:', answersRef.current)
+    transitionToStep(currentStep + 1)
+  }, [hasAnswer, isAnimating, currentStep, transitionToStep])
 
   // Enter key
   useEffect(() => {
@@ -284,17 +331,17 @@ function App() {
     setError('')
   }, [currentStep])
 
-  // Thank you screen
+  // ─── Thank you screen ───
   if (showThankYou) {
     const tyData = visibleQuestions.find(q => q.type === 'thankyou')
     return (
-      <div ref={thankYouRef} className="thankyou-screen">
+      <div ref={thankYouRef} className="thankyou-screen" style={{ opacity: 0 }}>
         <img src={tyData.image} alt="" className="thankyou-bg" />
         <div className="thankyou-overlay" />
         <div className="thankyou-content">
-          <Logo className="thankyou-logo" />
-          <h1 className="thankyou-heading" dangerouslySetInnerHTML={{ __html: tyData.heading }} />
-          <p className="thankyou-body">
+          <div className="anim-item"><Logo className="thankyou-logo" /></div>
+          <h1 className="anim-item thankyou-heading" dangerouslySetInnerHTML={{ __html: tyData.heading }} />
+          <p className="anim-item thankyou-body">
             {tyData.body}<br />
             Get started with our <a href={tyData.linkUrl}>{tyData.linkText}</a>!
           </p>
@@ -317,14 +364,15 @@ function App() {
           <Logo className="survey-logo" />
         </div>
 
-        <div className="survey-form-scroll">
-          <div ref={contentRef} className="survey-content">
-            <h2 className="survey-question" dangerouslySetInnerHTML={{ __html: current.question }} />
+        <div className="survey-form-scroll" ref={formAreaRef}>
+          {/* Each .anim-item is an individually animated element */}
+          <div className="survey-content">
+            <h2 className="anim-item survey-question" dangerouslySetInnerHTML={{ __html: current.question }} />
 
-            {current.subtitle && <p className="survey-subtitle">{current.subtitle}</p>}
-            {current.description && <p className="survey-description">{current.description}</p>}
+            {current.subtitle && <p className="anim-item survey-subtitle">{current.subtitle}</p>}
+            {current.description && <p className="anim-item survey-description">{current.description}</p>}
 
-            <div className="survey-options-wrapper">
+            <div className="anim-item survey-options-wrapper">
               <div className="survey-options">
 
                 {current.type === 'scale' && (
@@ -370,7 +418,7 @@ function App() {
           {showButton && (
             <div ref={submitWrapRef} className="survey-submit">
               <button className="submit-btn" onClick={handleSubmit}>
-                Submit
+                {current.type === 'scale' ? 'Next' : 'Submit'}
               </button>
             </div>
           )}
