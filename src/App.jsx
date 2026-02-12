@@ -129,8 +129,8 @@ function App() {
     return currentAnswer !== undefined && currentAnswer !== ''
   })()
 
-  // Show button on all interactive slides
-  const showButton = current?.type === 'scale' || current?.type === 'text' || current?.type === 'slider'
+  // Show button only on text/slider slides (scale auto-advances)
+  const showButton = current?.type === 'text' || current?.type === 'slider'
 
   // Preload all images
   useEffect(() => {
