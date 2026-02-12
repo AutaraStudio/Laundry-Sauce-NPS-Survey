@@ -23,8 +23,8 @@
   --color-text-light: #6A6560;
   --color-error: #E53E3E;
   --color-black: #1A1A1A;
-  --radius-pill: 50px;
-  --radius-box: 10px;
+  --radius-pill: 0px;
+  --radius-box: 0px;
   --font-heading: 'D-DINCondensed-Bold', 'Arial Narrow', 'Impact', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
