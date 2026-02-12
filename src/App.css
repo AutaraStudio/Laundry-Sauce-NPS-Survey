@@ -23,8 +23,8 @@
   --color-text-light: #6A6560;
   --color-error: #E53E3E;
   --color-black: #1A1A1A;
-  --radius-pill: 50px;
-  --radius-box: 10px;
+  --radius-pill: 0px;
+  --radius-box: 0px;
   --font-heading: 'D-DINCondensed-Bold', 'Arial Narrow', 'Impact', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -214,7 +214,7 @@ body {
   background: var(--color-black);
   color: #fff;
   border: none;
-  border-radius: 0;
+  border-radius: var(--radius-box);
   font-family: var(--font-body);
   font-size: clamp(12px, 1vw, 14px);
   font-weight: 500;
@@ -253,7 +253,7 @@ body {
   font-size: 12px;
   font-weight: 500;
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: var(--radius-box);
   white-space: nowrap;
   opacity: 0;
   transform: translateY(-4px);
@@ -296,7 +296,7 @@ body {
   aspect-ratio: 1;
   max-height: 52px;
   border: 1.5px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-box);
   background: var(--color-surface);
   color: var(--color-text);
   font-family: var(--font-body);
@@ -483,7 +483,7 @@ body {
 
   .scale-btn {
     font-size: clamp(12px, 2.8vw, 14px);
-    border-radius: 6px;
+    border-radius: var(--radius-box);
     aspect-ratio: 1;
     min-height: unset;
     max-height: unset;
