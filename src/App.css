@@ -1,5 +1,4 @@
-/* Inter Font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Inter Font — loaded via <link> in index.html */
 
 /* D-DIN Condensed Bold for headings */
 @font-face {
@@ -7,7 +6,7 @@
   src: url('/fonts/D-DINCondensed-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 :root {
