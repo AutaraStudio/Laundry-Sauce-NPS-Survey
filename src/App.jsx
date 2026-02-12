@@ -79,8 +79,8 @@ function App() {
     return currentAnswer !== undefined && currentAnswer !== ''
   })()
 
-  // Always show a button (NEXT or SUBMIT)
-  const showButton = current?.type === 'scale' || current?.type === 'text' || current?.type === 'slider'
+  // Show button for text questions only (not scale)
+  const showButton = current?.type === 'text' || current?.type === 'slider'
 
   // Preload all images
   useEffect(() => {
@@ -97,7 +97,9 @@ function App() {
     if (showThankYou || !current || current.type === 'thankyou') return
 
     gsap.set(contentRef.current, { opacity: 0, filter: 'blur(12px)', y: 8 })
-    gsap.set(submitWrapRef.current, { opacity: 0, filter: 'blur(12px)', y: 8 })
+    if (submitWrapRef.current) {
+      gsap.set(submitWrapRef.current, { opacity: 0, filter: 'blur(12px)', y: 8 })
+    }
 
     const tl = gsap.timeline({ delay: 0.05 })
 
@@ -220,12 +222,23 @@ function App() {
     }
   }, [currentStep, showThankYou])
 
-  // Scale select — just store value, no auto advance
+  // Scale select — store value and auto advance
   const handleScaleSelect = useCallback((value) => {
     if (isAnimating) return
     setError('')
-    setAnswers(prev => ({ ...prev, [current.id]: value }))
-  }, [current?.id, isAnimating])
+    setAnswers(prev => {
+      const updated = { ...prev, [current.id]: value }
+      // Auto-advance after a brief delay
+      setTimeout(() => {
+        const freshVisible = getVisibleQuestions(updated, updated[1])
+        const nextStep = currentStep + 1
+        if (nextStep < freshVisible.length) {
+          transitionToStep(nextStep)
+        }
+      }, 300)
+      return updated
+    })
+  }, [current?.id, isAnimating, currentStep, transitionToStep])
 
   // Text input
   const handleTextChange = (value) => {
@@ -353,7 +366,7 @@ function App() {
           {showButton && (
             <div ref={submitWrapRef} className="survey-submit">
               <button className="submit-btn" onClick={handleSubmit}>
-                {isLastSurveyStep && hasAnswer ? 'Submit' : 'Next'}
+                Submit
               </button>
             </div>
           )}
