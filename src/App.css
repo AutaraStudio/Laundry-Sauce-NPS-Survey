@@ -297,7 +297,7 @@ body {
   max-height: 52px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-box);
-  background: var(--color-surface);
+  background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: clamp(14px, 1.1vw, 16px);
